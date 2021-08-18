@@ -1,0 +1,24 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 96vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.selection {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.text {
+  display: flex;
+  flex: 2;
+  width: 30vw;
+  justify-content: center;
+  align-items: center;
+}
