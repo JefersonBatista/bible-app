@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import List from '../components/List'
 import styles from '../styles/home.module.css'
@@ -15,11 +15,6 @@ export default function Home() {
   const [chapter, setChapter] = useState(1)
   const [verse, setVerse] = useState(1)
   const [text, setText] = useState('')
-
-  const versionSelRef = useRef()
-  const bookSelRef = useRef()
-  const chapterSelRef = useRef()
-  const verseSelRef = useRef()
 
   const bible_api_address = 'https://www.abibliadigital.com.br/api'
 
@@ -41,9 +36,7 @@ export default function Home() {
 
     const versions = await response.json()
 
-    // The indentation to avoid 'versions.map is not a function' error
-    setVersions(versions
-      .map(version => ({
+    setVersions(versions.map(version => ({
         value: version.version,
         label: version.version.toUpperCase(),
       }))
@@ -58,9 +51,7 @@ export default function Home() {
 
     const books = await response.json()
 
-    // The indentation to avoid 'books.map is not a function' error
-    setBooks(books
-      .map(book => ({
+    setBooks(books.map(book => ({
         value: book.abbrev.pt,
         label: book.name, 
       }))
@@ -75,6 +66,7 @@ export default function Home() {
 
     const book_info = await response.json()
     const number_of_chapters = book_info.chapters
+
     setChapters([...Array(number_of_chapters).keys()].map(c => ({
       value: c+1,
       label: c+1,
@@ -95,20 +87,20 @@ export default function Home() {
     })))
   }, [version, book, chapter])
 
-  const handleVersionSel = () => {
-    setVersion(versionSelRef.current.value)
+  const handleVersionSel = (event) => {
+    setVersion(event.target.value)
   }
 
-  const handleBookSel = () => {
-    setBook(bookSelRef.current.value)
+  const handleBookSel = (event) => {
+    setBook(event.target.value)
   }
 
-  const handleChapterSel = () => {
-    setChapter(chapterSelRef.current.value)
+  const handleChapterSel = (event) => {
+    setChapter(event.target.value)
   }
 
-  const handleVerseSel = () => {
-    setVerse(verseSelRef.current.value)
+  const handleVerseSel = (event) => {
+    setVerse(event.target.value)
   }
 
   useEffect(() => {
@@ -139,10 +131,10 @@ export default function Home() {
       <main className={styles.main}>
         {/* The onSubmit function of this form is still missing */}
         <form className={styles.selection}>
-          <List selRef={versionSelRef} title='Versão:' items={versions} onChange={handleVersionSel} />
-          <List selRef={bookSelRef} title='Livro:' items={books} onChange={handleBookSel} />
-          <List selRef={chapterSelRef} title='Capítulo:' items={chapters} onChange={handleChapterSel} />
-          <List selRef={verseSelRef} title='Versículo:' items={verses} onChange={handleVerseSel} />
+          <List title='Versão:' items={versions} handleChange={handleVersionSel} />
+          <List title='Livro:' items={books} handleChange={handleBookSel} />
+          <List title='Capítulo:' items={chapters} handleChange={handleChapterSel} />
+          <List title='Versículo:' items={verses} handleChange={handleVerseSel} />
         </form>
 
         <div className={styles.text}>
