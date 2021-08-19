@@ -1,7 +1,6 @@
 .main {
   display: flex;
   flex-direction: column;
-  height: 96vh;
   justify-content: center;
   align-items: center;
 }
@@ -13,12 +12,14 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+  padding-top: 50px;
 }
 
 .text {
   display: flex;
-  flex: 2;
+  flex: 6;
   width: 30vw;
   justify-content: center;
   align-items: center;
+  padding-top: 50px;
 }
