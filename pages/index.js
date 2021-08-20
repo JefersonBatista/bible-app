@@ -18,10 +18,22 @@ export default function Home() {
 
   const bible_api_address = 'https://www.abibliadigital.com.br/api'
 
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj' +
+          'AyMSAwMDo0NDozMyBHTVQrMDAwMC42MTFlNTA2ZjExMDNlODAwMjMxNGNiZTYiL' +
+          'CJpYXQiOjE2Mjk0MjAyNzN9.sMQJRGveFyVUHPdhppVKlNa9FzdWVg_2fzeZaPSdnSk'
+
+  const authObj = {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
   const getVerseText = useCallback(async () => {
     // Calling the Bible API to get the Bible verse
     const response = await fetch(
-      `${bible_api_address}/verses/${version}/${book}/${chapter}/${verse}`
+      `${bible_api_address}/verses/${version}/${book}/${chapter}/${verse}`,
+      authObj
     )
 
     const verse_data = await response.json()
@@ -31,7 +43,8 @@ export default function Home() {
   const getBibleVersions = async () => {
     // Calling the Bible API to get the list of available versions
     const response = await fetch(
-      `${bible_api_address}/versions`
+      `${bible_api_address}/versions`,
+      authObj
     )
 
     const versions = await response.json()
@@ -46,7 +59,8 @@ export default function Home() {
   const getBibleBooks = async () => {
     // Calling the Bible API to get the list of Bible books
     const response = await fetch(
-      `${bible_api_address}/books`
+      `${bible_api_address}/books`,
+      authObj
     )
 
     const books = await response.json()
@@ -61,7 +75,8 @@ export default function Home() {
   const getChapterNumbers = useCallback(async () => {
     // Calling the Bible API to get the number of chapters of the selected book
     const response = await fetch(
-      `${bible_api_address}/books/${book}`
+      `${bible_api_address}/books/${book}`,
+      authObj
     )
 
     const book_info = await response.json()
@@ -76,7 +91,8 @@ export default function Home() {
   const getVerseNumbers = useCallback(async () => {
     // Calling the Bible API to get the number of verses of the selected chapter
     const response = await fetch(
-      `${bible_api_address}/verses/${version}/${book}/${chapter}`
+      `${bible_api_address}/verses/${version}/${book}/${chapter}`,
+      authObj
     )
 
     const chapter_info = await response.json()
@@ -89,14 +105,18 @@ export default function Home() {
 
   const handleVersionSel = (event) => {
     setVersion(event.target.value)
+    setVerse(1)
   }
 
   const handleBookSel = (event) => {
     setBook(event.target.value)
+    setChapter(1)
+    setVerse(1)
   }
 
   const handleChapterSel = (event) => {
     setChapter(event.target.value)
+    setVerse(1)
   }
 
   const handleVerseSel = (event) => {
@@ -131,10 +151,10 @@ export default function Home() {
       <main className={styles.main}>
         {/* The onSubmit function of this form is still missing */}
         <form className={styles.selection}>
-          <List title='Versão:' items={versions} handleChange={handleVersionSel} />
-          <List title='Livro:' items={books} handleChange={handleBookSel} />
-          <List title='Capítulo:' items={chapters} handleChange={handleChapterSel} />
-          <List title='Versículo:' items={verses} handleChange={handleVerseSel} />
+          <List title='Versão:' items={versions} value={version} handleChange={handleVersionSel} />
+          <List title='Livro:' items={books} value={book} handleChange={handleBookSel} />
+          <List title='Capítulo:' items={chapters} value={chapter} handleChange={handleChapterSel} />
+          <List title='Versículo:' items={verses} value={verse} handleChange={handleVerseSel} />
         </form>
 
         <div className={styles.text}>
