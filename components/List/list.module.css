@@ -4,10 +4,9 @@
   flex: 1;
   justify-content: center;
   align-items: center;
-  font-family: Verdana;
   font-size: 30px;
 }
 
 .list > .title {
-  color: blue;
+  color: rgb(81, 159, 187);
 }

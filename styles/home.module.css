@@ -1,8 +1,10 @@
 .main {
   display: flex;
   flex-direction: column;
+  height: 96vh;
   justify-content: center;
   align-items: center;
+  background-color: black;
 }
 
 .selection {
@@ -20,7 +22,12 @@
   flex: 6;
   width: 50%;
   font-size: 30px;
-  justify-content: center;
-  align-items: center;
-  padding-top: 120px;
+  color: white;
+  background-color: rgb(74, 74, 74);
+  border-radius: 20px;
+  margin-top: 60px;
+  margin-bottom: 80px;
+  padding-top: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
