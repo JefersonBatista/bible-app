@@ -19,8 +19,8 @@ export default function Home() {
   const bible_api_address = 'https://www.abibliadigital.com.br/api'
 
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj' +
-          'AyMSAwMDo0NDozMyBHTVQrMDAwMC42MTFlNTA2ZjExMDNlODAwMjMxNGNiZTYiL' +
-          'CJpYXQiOjE2Mjk0MjAyNzN9.sMQJRGveFyVUHPdhppVKlNa9FzdWVg_2fzeZaPSdnSk'
+                'AyMSAwMDo0NDozMyBHTVQrMDAwMC42MTFlNTA2ZjExMDNlODAwMjMxNGNiZTYiL' +
+                'CJpYXQiOjE2Mjk0MjAyNzN9.sMQJRGveFyVUHPdhppVKlNa9FzdWVg_2fzeZaPSdnSk'
 
   const authObj = {
     method: 'GET',
@@ -80,7 +80,12 @@ export default function Home() {
     )
 
     const book_info = await response.json()
-    const number_of_chapters = book_info.chapters
+
+    /** Currently, the BibleAPI presents the letter to Titus with 2 chapters,
+   * rather than 3.
+   */
+    const number_of_chapters = 
+        book === 'tt' ? book_info.chapters + 1 : book_info.chapters
 
     setChapters([...Array(number_of_chapters).keys()].map(c => ({
       value: c+1,
@@ -103,9 +108,20 @@ export default function Home() {
     })))
   }, [version, book, chapter])
 
-  const handleVersionSel = (event) => {
-    setVersion(event.target.value)
-    setVerse(1)
+  const handleVersionSel = async (event) => {
+    const new_version = event.target.value
+
+    // Calling the Bible API to get the number of verses of the selected chapter
+    const response = await fetch(
+      `${bible_api_address}/verses/${new_version}/${book}/${chapter}`,
+      authObj
+    )
+
+    const chapter_info = await response.json()
+    const number_of_verses = chapter_info.chapter.verses
+
+    setVerse(Math.min(verse, number_of_verses))
+    setVersion(new_version)
   }
 
   const handleBookSel = (event) => {
@@ -121,6 +137,13 @@ export default function Home() {
 
   const handleVerseSel = (event) => {
     setVerse(event.target.value)
+  }
+
+  const treatText = (text) => {
+    return text
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&#x27;/g, "'");
   }
 
   useEffect(() => {
@@ -158,7 +181,7 @@ export default function Home() {
         </form>
 
         <div className={styles.text}>
-          {text}
+          {treatText(text)}
         </div>
       </main>
     </div>
