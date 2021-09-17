@@ -1,7 +1,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  height: 96vh;
+  height: 95vh;
   justify-content: center;
   align-items: center;
   background-color: black;
@@ -17,11 +17,36 @@
   padding-top: 50px;
 }
 
-.text {
+.textArea {
   display: flex;
+  flex-direction: row;
   flex: 6;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.textArea > .leftButton {
+  background-color: black;
+  width: 50px;
+  height: 50px;
+  margin-right: 30px;
+  border-radius: 50%;
+}
+
+.textArea > .rightButton {
+  background-color: black;
+  width: 50px;
+  height: 50px;
+  margin-left: 30px;
+  border-radius: 50%;
+}
+
+.text {
   width: 50%;
-  font-size: 30px;
+  height: 70%;
+  font-size: 25px;
+  text-align: justify;
   color: white;
   background-color: rgb(74, 74, 74);
   border-radius: 20px;
@@ -30,4 +55,10 @@
   padding-top: 40px;
   padding-left: 40px;
   padding-right: 40px;
+}
+
+.footer {
+  background-color: black;
+  color: white;
+  text-align: center;
 }

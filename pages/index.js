@@ -1,5 +1,7 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
 
 import List from '../components/List'
 import styles from '../styles/home.module.css'
@@ -14,6 +16,8 @@ export default function Home() {
   const [book, setBook] = useState('gn')
   const [chapter, setChapter] = useState(1)
   const [verse, setVerse] = useState(1)
+
+  const [verseTexts, setVerseTexts] = useState([])
   const [text, setText] = useState('')
 
   const bible_api_address = 'https://www.abibliadigital.com.br/api'
@@ -30,15 +34,8 @@ export default function Home() {
   }
 
   const getVerseText = useCallback(async () => {
-    // Calling the Bible API to get the Bible verse
-    const response = await fetch(
-      `${bible_api_address}/verses/${version}/${book}/${chapter}/${verse}`,
-      authObj
-    )
-
-    const verse_data = await response.json()
-    setText(verse_data.text)
-  }, [version, book, chapter, verse])
+    setText(verseTexts[verse - 1])
+  }, [verseTexts, verse])
 
   const getBibleVersions = async () => {
     // Calling the Bible API to get the list of available versions
@@ -80,12 +77,7 @@ export default function Home() {
     )
 
     const book_info = await response.json()
-
-    /** Currently, the BibleAPI presents the letter to Titus with 2 chapters,
-   * rather than 3.
-   */
-    const number_of_chapters = 
-        book === 'tt' ? book_info.chapters + 1 : book_info.chapters
+    const number_of_chapters = book_info.chapters
 
     setChapters([...Array(number_of_chapters).keys()].map(c => ({
       value: c+1,
@@ -93,7 +85,7 @@ export default function Home() {
     })))
   }, [book])
 
-  const getVerseNumbers = useCallback(async () => {
+  const getChapterVerses = useCallback(async () => {
     // Calling the Bible API to get the number of verses of the selected chapter
     const response = await fetch(
       `${bible_api_address}/verses/${version}/${book}/${chapter}`,
@@ -106,6 +98,10 @@ export default function Home() {
       value: v+1,
       label: v+1,
     })))
+
+    const new_verse_texts = chapter_info.verses.map(v => treatText(v.text))
+
+    setVerseTexts(new_verse_texts)
   }, [version, book, chapter])
 
   const handleVersionSel = async (event) => {
@@ -131,12 +127,20 @@ export default function Home() {
   }
 
   const handleChapterSel = (event) => {
-    setChapter(event.target.value)
+    setChapter(parseInt(event.target.value))
     setVerse(1)
   }
 
   const handleVerseSel = (event) => {
-    setVerse(event.target.value)
+    setVerse(parseInt(event.target.value))
+  }
+
+  const prevVerse = () => {
+    setVerse(verse - 1)
+  }
+
+  const nextVerse = () => {
+    setVerse(verse + 1)
   }
 
   const treatText = (text) => {
@@ -156,8 +160,8 @@ export default function Home() {
   }, [getChapterNumbers])
 
   useEffect(() => {
-    getVerseNumbers()
-  }, [getVerseNumbers])
+    getChapterVerses()
+  }, [getChapterVerses])
 
   useEffect(() => {
     getVerseText()
@@ -172,18 +176,41 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        {/* The onSubmit function of this form is still missing */}
-        <form className={styles.selection}>
+        <div className={styles.selection}>
           <List title='Versão:' items={versions} value={version} handleChange={handleVersionSel} />
           <List title='Livro:' items={books} value={book} handleChange={handleBookSel} />
           <List title='Capítulo:' items={chapters} value={chapter} handleChange={handleChapterSel} />
           <List title='Versículo:' items={verses} value={verse} handleChange={handleVerseSel} />
-        </form>
+        </div>
 
-        <div className={styles.text}>
-          {treatText(text)}
+        <div className={styles.textArea}>
+          <button className={styles.leftButton} onClick={prevVerse}
+            style={
+              { pointerEvents: verse === 1? 'none' : 'auto' }
+            }>
+            <FaAngleLeft
+              size={30}
+              color={verse === 1? 'gray' : 'rgb(81, 159, 187)'} />
+          </button>
+          <div className={styles.text}>
+            {text}
+          </div>
+          <button className={styles.rightButton} onClick={nextVerse}
+            style={
+              { pointerEvents: verse === verseTexts.length? 'none' : 'auto' }
+            }>
+            <FaAngleRight
+              size={30}
+              color={verse === verseTexts.length? 'gray' : 'rgb(81, 159, 187)'} />
+          </button>
         </div>
       </main>
+      <footer className={styles.footer}>
+        Este aplicativo web foi desenvolvido sobre{' '}
+        <Link href="https://www.abibliadigital.com.br/">
+          <a>ABíbliaDigital | Uma API REST para a Bíblia</a>
+        </Link>
+      </footer>
     </div>
   )
 }

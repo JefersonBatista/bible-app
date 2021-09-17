@@ -34,11 +34,6 @@ export default async function handler(req, res) {
     }
   })
 
-  /** Currently, the BibleAPI presents the letter to Titus with 2 chapters,
-   * rather than 3.
-   */
-  nt_num_chapters += 1
-
   const number_of_chapters = ot_num_chapters + nt_num_chapters
 
   res.status(200).json({
