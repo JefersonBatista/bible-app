@@ -185,30 +185,37 @@ export default function Home() {
 
         <div className={styles.textArea}>
           <button className={styles.leftButton} onClick={prevVerse}
-            style={
-              { pointerEvents: verse === 1? 'none' : 'auto' }
-            }>
+            style={{
+              pointerEvents: verse === 1? 'none' : 'auto',
+              visibility: verse === 1? 'hidden' : 'visible',
+            }}>
             <FaAngleLeft
               size={30}
-              color={verse === 1? 'gray' : 'rgb(81, 159, 187)'} />
+              color='rgb(81, 159, 187)' />
           </button>
+
           <div className={styles.text}>
             {text}
           </div>
+
           <button className={styles.rightButton} onClick={nextVerse}
-            style={
-              { pointerEvents: verse === verseTexts.length? 'none' : 'auto' }
-            }>
+            style={{
+              pointerEvents: verse === verseTexts.length? 'none' : 'auto',
+              visibility: verse === verseTexts.length? 'hidden' : 'visible',
+            }}>
             <FaAngleRight
               size={30}
-              color={verse === verseTexts.length? 'gray' : 'rgb(81, 159, 187)'} />
+              color='rgb(81, 159, 187)' />
           </button>
         </div>
       </main>
+
       <footer className={styles.footer}>
         Este aplicativo web foi desenvolvido sobre{' '}
         <Link href="https://www.abibliadigital.com.br/">
-          <a>ABíbliaDigital | Uma API REST para a Bíblia</a>
+          <a className={styles.link} target="_blank" rel="noreferrer noopener">
+            ABíbliaDigital | Uma API REST para a Bíblia
+          </a>
         </Link>
       </footer>
     </div>
