@@ -1,49 +1,62 @@
-.main {
+.container {
   display: flex;
   flex-direction: column;
-  height: 95vh;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 100vh;
+
+  background-color: rgb(20, 20, 20);
+}
+
+/* .main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   justify-content: center;
   align-items: center;
   background-color: rgb(20, 20, 20);
-}
+} */
 
 .selection {
   display: flex;
   flex-direction: row;
-  flex: 1;
+  /* flex: 1; */
   width: 100%;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  padding-top: 50px;
+  padding-top: 30px;
 }
 
 .textArea {
   display: flex;
   flex-direction: row;
-  flex: 6;
+  /* flex: 6; */
   width: 100%;
   justify-content: center;
   align-items: center;
 }
 
-.textArea > .leftButton, .rightButton {
+.prevButton,
+.nextButton {
   background-color: rgb(74, 74, 74);
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  border: 2px outset rgb(127, 127, 127);
 }
 
-.textArea > .leftButton {
+.prevButton {
   margin-right: 30px;
 }
 
-.textArea > .rightButton {
+.nextButton {
   margin-left: 30px;
 }
 
 .text {
   width: 50%;
-  height: 70%;
+  /* height: 70%; */
   font-size: 25px;
   text-align: justify;
   color: white;
@@ -51,9 +64,7 @@
   border-radius: 20px;
   margin-top: 60px;
   margin-bottom: 80px;
-  padding-top: 40px;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding: 40px;
 }
 
 .footer {
@@ -63,5 +74,6 @@
 }
 
 .link {
+  text-decoration: underline;
   color: rgb(81, 159, 187);
 }

@@ -1,171 +1,169 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
+import Head from "next/head";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
-import List from '../components/List'
-import styles from '../styles/home.module.css'
+import List from "../components/List";
+import styles from "../styles/home.module.css";
 
 export default function Home() {
-  const [versions, setVersions] = useState([])
-  const [books, setBooks] = useState([])
-  const [chapters, setChapters] = useState([])
-  const [verses, setVerses] = useState([])
+  const [versions, setVersions] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [chapters, setChapters] = useState([]);
+  const [verses, setVerses] = useState([]);
 
-  const [version, setVersion] = useState('acf')
-  const [book, setBook] = useState('gn')
-  const [chapter, setChapter] = useState(1)
-  const [verse, setVerse] = useState(1)
+  const [version, setVersion] = useState("acf");
+  const [book, setBook] = useState("gn");
+  const [chapter, setChapter] = useState(1);
+  const [verse, setVerse] = useState(1);
 
-  const [verseTexts, setVerseTexts] = useState([])
-  const [text, setText] = useState('')
+  const [verseTexts, setVerseTexts] = useState([]);
+  const [text, setText] = useState("");
 
-  const bible_api_address = 'https://www.abibliadigital.com.br/api'
+  const bible_api_address = "https://www.abibliadigital.com.br/api";
 
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj' +
-                'AyMSAwMDo0NDozMyBHTVQrMDAwMC42MTFlNTA2ZjExMDNlODAwMjMxNGNiZTYiL' +
-                'CJpYXQiOjE2Mjk0MjAyNzN9.sMQJRGveFyVUHPdhppVKlNa9FzdWVg_2fzeZaPSdnSk'
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj" +
+    "AyMSAwMDo0NDozMyBHTVQrMDAwMC42MTFlNTA2ZjExMDNlODAwMjMxNGNiZTYiL" +
+    "CJpYXQiOjE2Mjk0MjAyNzN9.sMQJRGveFyVUHPdhppVKlNa9FzdWVg_2fzeZaPSdnSk";
 
   const authObj = {
-    method: 'GET',
+    method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }
+  };
 
   const getVerseText = useCallback(async () => {
-    setText(verseTexts[verse - 1])
-  }, [verseTexts, verse])
+    setText(verseTexts[verse - 1]);
+  }, [verseTexts, verse]);
 
   const getBibleVersions = async () => {
     // Calling the Bible API to get the list of available versions
-    const response = await fetch(
-      `${bible_api_address}/versions`,
-      authObj
-    )
+    const response = await fetch(`${bible_api_address}/versions`, authObj);
 
-    const versions = await response.json()
+    const versions = await response.json();
 
-    setVersions(versions.map(version => ({
+    setVersions(
+      versions.map((version) => ({
         value: version.version,
         label: version.version.toUpperCase(),
       }))
-    )
-  }
+    );
+  };
 
   const getBibleBooks = async () => {
     // Calling the Bible API to get the list of Bible books
-    const response = await fetch(
-      `${bible_api_address}/books`,
-      authObj
-    )
+    const response = await fetch(`${bible_api_address}/books`, authObj);
 
-    const books = await response.json()
+    const books = await response.json();
 
-    setBooks(books.map(book => ({
+    setBooks(
+      books.map((book) => ({
         value: book.abbrev.pt,
-        label: book.name, 
+        label: book.name,
       }))
-    )
-  }
+    );
+  };
 
   const getChapterNumbers = useCallback(async () => {
     // Calling the Bible API to get the number of chapters of the selected book
-    const response = await fetch(
-      `${bible_api_address}/books/${book}`,
-      authObj
-    )
+    const response = await fetch(`${bible_api_address}/books/${book}`, authObj);
 
-    const book_info = await response.json()
-    const number_of_chapters = book_info.chapters
+    const book_info = await response.json();
+    const number_of_chapters = book_info.chapters;
 
-    setChapters([...Array(number_of_chapters).keys()].map(c => ({
-      value: c+1,
-      label: c+1,
-    })))
-  }, [book])
+    setChapters(
+      [...Array(number_of_chapters).keys()].map((c) => ({
+        value: c + 1,
+        label: c + 1,
+      }))
+    );
+  }, [book]);
 
   const getChapterVerses = useCallback(async () => {
     // Calling the Bible API to get the number of verses of the selected chapter
     const response = await fetch(
       `${bible_api_address}/verses/${version}/${book}/${chapter}`,
       authObj
-    )
+    );
 
-    const chapter_info = await response.json()
-    const number_of_verses = chapter_info.chapter.verses
-    setVerses([...Array(number_of_verses).keys()].map(v => ({
-      value: v+1,
-      label: v+1,
-    })))
+    const chapter_info = await response.json();
+    const number_of_verses = chapter_info.chapter.verses;
+    setVerses(
+      [...Array(number_of_verses).keys()].map((v) => ({
+        value: v + 1,
+        label: v + 1,
+      }))
+    );
 
-    const new_verse_texts = chapter_info.verses.map(v => treatText(v.text))
+    const new_verse_texts = chapter_info.verses.map((v) => treatText(v.text));
 
-    setVerseTexts(new_verse_texts)
-  }, [version, book, chapter])
+    setVerseTexts(new_verse_texts);
+  }, [version, book, chapter]);
 
   const handleVersionSel = async (event) => {
-    const new_version = event.target.value
+    const new_version = event.target.value;
 
     // Calling the Bible API to get the number of verses of the selected chapter
     const response = await fetch(
       `${bible_api_address}/verses/${new_version}/${book}/${chapter}`,
       authObj
-    )
+    );
 
-    const chapter_info = await response.json()
-    const number_of_verses = chapter_info.chapter.verses
+    const chapter_info = await response.json();
+    const number_of_verses = chapter_info.chapter.verses;
 
-    setVerse(Math.min(verse, number_of_verses))
-    setVersion(new_version)
-  }
+    setVerse(Math.min(verse, number_of_verses));
+    setVersion(new_version);
+  };
 
   const handleBookSel = (event) => {
-    setBook(event.target.value)
-    setChapter(1)
-    setVerse(1)
-  }
+    setBook(event.target.value);
+    setChapter(1);
+    setVerse(1);
+  };
 
   const handleChapterSel = (event) => {
-    setChapter(parseInt(event.target.value))
-    setVerse(1)
-  }
+    setChapter(parseInt(event.target.value));
+    setVerse(1);
+  };
 
   const handleVerseSel = (event) => {
-    setVerse(parseInt(event.target.value))
-  }
+    setVerse(parseInt(event.target.value));
+  };
 
   const prevVerse = () => {
-    setVerse(verse - 1)
-  }
+    setVerse(verse - 1);
+  };
 
   const nextVerse = () => {
-    setVerse(verse + 1)
-  }
+    setVerse(verse + 1);
+  };
 
   const treatText = (text) => {
     return text
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
       .replace(/&#x27;/g, "'");
-  }
+  };
 
   useEffect(() => {
-    getBibleVersions()
-    getBibleBooks()
-  }, [])
+    getBibleVersions();
+    getBibleBooks();
+  }, []);
 
   useEffect(() => {
-    getChapterNumbers()
-  }, [getChapterNumbers])
+    getChapterNumbers();
+  }, [getChapterNumbers]);
 
   useEffect(() => {
-    getChapterVerses()
-  }, [getChapterVerses])
+    getChapterVerses();
+  }, [getChapterVerses]);
 
   useEffect(() => {
-    getVerseText()
-  }, [getVerseText])
+    getVerseText();
+  }, [getVerseText]);
 
   return (
     <div>
@@ -175,49 +173,75 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <div className={styles.container}>
+        {/* <main className={styles.main}> */}
         <div className={styles.selection}>
-          <List title='Versão:' items={versions} value={version} handleChange={handleVersionSel} />
-          <List title='Livro:' items={books} value={book} handleChange={handleBookSel} />
-          <List title='Capítulo:' items={chapters} value={chapter} handleChange={handleChapterSel} />
-          <List title='Versículo:' items={verses} value={verse} handleChange={handleVerseSel} />
+          <List
+            title="Versão:"
+            items={versions}
+            value={version}
+            handleChange={handleVersionSel}
+          />
+          <List
+            title="Livro:"
+            items={books}
+            value={book}
+            handleChange={handleBookSel}
+          />
+          <List
+            title="Capítulo:"
+            items={chapters}
+            value={chapter}
+            handleChange={handleChapterSel}
+          />
+          <List
+            title="Versículo:"
+            items={verses}
+            value={verse}
+            handleChange={handleVerseSel}
+          />
         </div>
 
         <div className={styles.textArea}>
-          <button className={styles.leftButton} onClick={prevVerse}
+          <button
+            className={styles.prevButton}
+            onClick={prevVerse}
             style={{
-              pointerEvents: verse === 1? 'none' : 'auto',
-              visibility: verse === 1? 'hidden' : 'visible',
-            }}>
-            <FaAngleLeft
-              size={30}
-              color='rgb(81, 159, 187)' />
+              pointerEvents: verse === 1 ? "none" : "auto",
+              visibility: verse === 1 ? "hidden" : "visible",
+            }}
+          >
+            <FaAngleLeft size={30} color="rgb(81, 159, 187)" />
           </button>
 
-          <div className={styles.text}>
-            {text}
-          </div>
+          <div className={styles.text}>{text}</div>
 
-          <button className={styles.rightButton} onClick={nextVerse}
+          <button
+            className={styles.nextButton}
+            onClick={nextVerse}
             style={{
-              pointerEvents: verse === verseTexts.length? 'none' : 'auto',
-              visibility: verse === verseTexts.length? 'hidden' : 'visible',
-            }}>
-            <FaAngleRight
-              size={30}
-              color='rgb(81, 159, 187)' />
+              pointerEvents: verse === verseTexts.length ? "none" : "auto",
+              visibility: verse === verseTexts.length ? "hidden" : "visible",
+            }}
+          >
+            <FaAngleRight size={30} color="rgb(81, 159, 187)" />
           </button>
         </div>
-      </main>
+        {/* </main> */}
 
-      <footer className={styles.footer}>
-        Este aplicativo web foi desenvolvido sobre{' '}
-        <Link href="https://www.abibliadigital.com.br/">
-          <a className={styles.link} target="_blank" rel="noreferrer noopener">
-            ABíbliaDigital | Uma API REST para a Bíblia
-          </a>
-        </Link>
-      </footer>
+        <footer className={styles.footer}>
+          Este aplicativo web foi desenvolvido sobre{" "}
+          <Link href="https://www.abibliadigital.com.br/">
+            <a
+              className={styles.link}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              ABíbliaDigital | Uma API REST para a Bíblia
+            </a>
+          </Link>
+        </footer>
+      </div>
     </div>
-  )
+  );
 }
