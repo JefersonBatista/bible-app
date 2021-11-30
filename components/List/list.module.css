@@ -9,3 +9,9 @@
 .list > .title {
   color: rgb(81, 159, 187);
 }
+
+@media (max-width: 600px) {
+  .list > .title {
+    display: none;
+  }
+}

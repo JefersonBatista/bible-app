@@ -97,7 +97,9 @@ export default function Home() {
       }))
     );
 
-    const new_verse_texts = chapter_info.verses.map((v) => treatText(v.text));
+    const new_verse_texts = chapter_info.verses.map((v) =>
+      decodeHtmlSpecialChars(v.text)
+    );
 
     setVerseTexts(new_verse_texts);
   }, [version, book, chapter]);
@@ -141,11 +143,10 @@ export default function Home() {
     setVerse(verse + 1);
   };
 
-  const treatText = (text) => {
-    return text
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&#x27;/g, "'");
+  const decodeHtmlSpecialChars = (text) => {
+    const span = document.createElement("span");
+    span.innerHTML = text;
+    return span.textContent;
   };
 
   useEffect(() => {
@@ -174,7 +175,6 @@ export default function Home() {
       </Head>
 
       <div className={styles.container}>
-        {/* <main className={styles.main}> */}
         <div className={styles.selection}>
           <List
             title="Versão:"
@@ -227,19 +227,20 @@ export default function Home() {
             <FaAngleRight size={30} color="rgb(81, 159, 187)" />
           </button>
         </div>
-        {/* </main> */}
 
         <footer className={styles.footer}>
-          Este aplicativo web foi desenvolvido sobre{" "}
-          <Link href="https://www.abibliadigital.com.br/">
-            <a
-              className={styles.link}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              ABíbliaDigital | Uma API REST para a Bíblia
-            </a>
-          </Link>
+          <span>
+            Este aplicativo web foi desenvolvido sobre{" "}
+            <Link href="https://www.abibliadigital.com.br/">
+              <a
+                className={styles.link}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                ABíbliaDigital | Uma API REST para a Bíblia
+              </a>
+            </Link>
+          </span>
         </footer>
       </div>
     </div>
