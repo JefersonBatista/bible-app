@@ -204,27 +204,25 @@ export default function Home() {
 
         <div className={styles.textArea}>
           <button
-            className={styles.prevButton}
+            className={
+              verse === 1 ? styles.hiddenPrevButton : styles.prevButton
+            }
             onClick={prevVerse}
-            style={{
-              pointerEvents: verse === 1 ? "none" : "auto",
-              visibility: verse === 1 ? "hidden" : "visible",
-            }}
           >
-            <FaAngleLeft size={30} color="rgb(81, 159, 187)" />
+            <FaAngleLeft className={styles.icon} size={30} color="rgb(81, 159, 187)" />
           </button>
 
           <div className={styles.text}>{text}</div>
 
           <button
-            className={styles.nextButton}
+            className={
+              verse === verseTexts.length
+                ? styles.hiddenNextButton
+                : styles.nextButton
+            }
             onClick={nextVerse}
-            style={{
-              pointerEvents: verse === verseTexts.length ? "none" : "auto",
-              visibility: verse === verseTexts.length ? "hidden" : "visible",
-            }}
           >
-            <FaAngleRight size={30} color="rgb(81, 159, 187)" />
+            <FaAngleRight className={styles.icon} size={30} color="rgb(81, 159, 187)" />
           </button>
         </div>
 
