@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 import List from "../components/List";
+import SkeletonLoader from "../components/SkeletonLoader";
 import styles from "../styles/home.module.css";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
 
   const [verseTexts, setVerseTexts] = useState([]);
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const bible_api_address = "https://www.abibliadigital.com.br/api";
 
@@ -82,6 +84,8 @@ export default function Home() {
   }, [book]);
 
   const getChapterVerses = useCallback(async () => {
+    setLoading(true);
+
     // Calling the Bible API to get the text of the verses of the selected chapter
     const response = await fetch(
       `${bible_api_address}/verses/${version}/${book}/${chapter}`,
@@ -102,6 +106,8 @@ export default function Home() {
     );
 
     setVerseTexts(new_verse_texts);
+
+    setLoading(false);
   }, [version, book, chapter]);
 
   const handleVersionSel = async (event) => {
@@ -218,7 +224,13 @@ export default function Home() {
             />
           </button>
 
-          <div className={styles.text}>{text}</div>
+          {loading ? (
+            <div className={styles.text}>
+              <SkeletonLoader />
+            </div>
+          ) : (
+            <div className={styles.text}>{text}</div>
+          )}
 
           <button
             className={
