@@ -249,16 +249,16 @@ export default function Home() {
         </div>
 
         <footer className={styles.footer}>
-          <span>
+          <span className={styles.normal}>
             Este aplicativo web foi desenvolvido sobre{" "}
-            <Link href="https://www.abibliadigital.com.br/">
-              <a
-                className={styles.link}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+            <Link
+              href="https://www.abibliadigital.com.br"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <span className={styles.link}>
                 ABíbliaDigital | Uma API REST para a Bíblia
-              </a>
+              </span>
             </Link>
           </span>
         </footer>
