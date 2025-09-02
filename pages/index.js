@@ -82,7 +82,7 @@ export default function Home() {
   }, [book]);
 
   const getChapterVerses = useCallback(async () => {
-    // Calling the Bible API to get the number of verses of the selected chapter
+    // Calling the Bible API to get the text of the verses of the selected chapter
     const response = await fetch(
       `${bible_api_address}/verses/${version}/${book}/${chapter}`,
       authObj
