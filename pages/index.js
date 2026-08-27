@@ -22,7 +22,7 @@ export default function Home() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const bible_api_address = "https://www.abibliadigital.com.br/api";
+  const bible_api_host = "https://www.abibliadigital.api.br";
 
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj" +
@@ -42,7 +42,7 @@ export default function Home() {
 
   const getBibleVersions = async () => {
     // Calling the Bible API to get the list of available versions
-    const response = await fetch(`${bible_api_address}/versions`, authObj);
+    const response = await fetch(`${bible_api_host}/api/versions`, authObj);
 
     const versions = await response.json();
 
@@ -50,13 +50,13 @@ export default function Home() {
       versions.map((version) => ({
         value: version.version,
         label: version.version.toUpperCase(),
-      }))
+      })),
     );
   };
 
   const getBibleBooks = async () => {
     // Calling the Bible API to get the list of Bible books
-    const response = await fetch(`${bible_api_address}/books`, authObj);
+    const response = await fetch(`${bible_api_host}/api/books`, authObj);
 
     const books = await response.json();
 
@@ -64,13 +64,16 @@ export default function Home() {
       books.map((book) => ({
         value: book.abbrev.pt,
         label: book.name,
-      }))
+      })),
     );
   };
 
   const getChapterNumbers = useCallback(async () => {
     // Calling the Bible API to get the number of chapters of the selected book
-    const response = await fetch(`${bible_api_address}/books/${book}`, authObj);
+    const response = await fetch(
+      `${bible_api_host}/api/books/${book}`,
+      authObj,
+    );
 
     const book_info = await response.json();
     const number_of_chapters = book_info.chapters;
@@ -79,7 +82,7 @@ export default function Home() {
       [...Array(number_of_chapters).keys()].map((c) => ({
         value: c + 1,
         label: c + 1,
-      }))
+      })),
     );
   }, [book]);
 
@@ -88,8 +91,8 @@ export default function Home() {
 
     // Calling the Bible API to get the text of the verses of the selected chapter
     const response = await fetch(
-      `${bible_api_address}/verses/${version}/${book}/${chapter}`,
-      authObj
+      `${bible_api_host}/api/verses/${version}/${book}/${chapter}`,
+      authObj,
     );
 
     const chapter_info = await response.json();
@@ -98,11 +101,11 @@ export default function Home() {
       [...Array(number_of_verses).keys()].map((v) => ({
         value: v + 1,
         label: v + 1,
-      }))
+      })),
     );
 
     const new_verse_texts = chapter_info.verses.map((v) =>
-      decodeHtmlSpecialChars(v.text)
+      decodeHtmlSpecialChars(v.text),
     );
 
     setVerseTexts(new_verse_texts);
@@ -115,8 +118,8 @@ export default function Home() {
 
     // Calling the Bible API to get the number of verses of the selected chapter
     const response = await fetch(
-      `${bible_api_address}/verses/${new_version}/${book}/${chapter}`,
-      authObj
+      `${bible_api_host}/api/verses/${new_version}/${book}/${chapter}`,
+      authObj,
     );
 
     const chapter_info = await response.json();
@@ -252,7 +255,7 @@ export default function Home() {
           <span className={styles.normal}>
             Este aplicativo web foi desenvolvido sobre{" "}
             <Link
-              href="https://www.abibliadigital.com.br"
+              href={bible_api_host}
               target="_blank"
               rel="noreferrer noopener"
             >

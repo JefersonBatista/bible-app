@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-const bible_api_address = "https://www.abibliadigital.com.br/api";
+const bible_api_host = "https://www.abibliadigital.api.br";
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj" +
@@ -16,7 +16,7 @@ const authObj = {
 
 export default async function handler(req, res) {
   // Calling the Bible API to get the list of Bible books
-  const response = await fetch(`${bible_api_address}/books`, authObj);
+  const response = await fetch(`${bible_api_host}/api/books`, authObj);
 
   const books = await response.json();
 
