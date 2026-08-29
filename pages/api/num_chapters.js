@@ -2,21 +2,9 @@
 
 const bible_api_host = "https://www.abibliadigital.api.br";
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj" +
-  "AyMSAwMDo0NDozMyBHTVQrMDAwMC42MTFlNTA2ZjExMDNlODAwMjMxNGNiZTYiL" +
-  "CJpYXQiOjE2Mjk0MjAyNzN9.sMQJRGveFyVUHPdhppVKlNa9FzdWVg_2fzeZaPSdnSk";
-
-const authObj = {
-  method: "GET",
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-};
-
 export default async function handler(req, res) {
   // Calling the Bible API to get the list of Bible books
-  const response = await fetch(`${bible_api_host}/api/books`, authObj);
+  const response = await fetch(`${bible_api_host}/api/books`);
 
   const books = await response.json();
 

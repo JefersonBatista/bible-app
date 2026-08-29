@@ -24,25 +24,13 @@ export default function Home() {
 
   const bible_api_host = "https://www.abibliadigital.api.br";
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkZyaSBBdWcgMjAgMj" +
-    "AyMSAwMDo0NDozMyBHTVQrMDAwMC42MTFlNTA2ZjExMDNlODAwMjMxNGNiZTYiL" +
-    "CJpYXQiOjE2Mjk0MjAyNzN9.sMQJRGveFyVUHPdhppVKlNa9FzdWVg_2fzeZaPSdnSk";
-
-  const authObj = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
   const getVerseText = useCallback(async () => {
     setText(verseTexts[verse - 1]);
   }, [verseTexts, verse]);
 
   const getBibleVersions = async () => {
     // Calling the Bible API to get the list of available versions
-    const response = await fetch(`${bible_api_host}/api/versions`, authObj);
+    const response = await fetch(`${bible_api_host}/api/versions`);
 
     const versions = await response.json();
 
@@ -56,7 +44,7 @@ export default function Home() {
 
   const getBibleBooks = async () => {
     // Calling the Bible API to get the list of Bible books
-    const response = await fetch(`${bible_api_host}/api/books`, authObj);
+    const response = await fetch(`${bible_api_host}/api/books`);
 
     const books = await response.json();
 
@@ -70,10 +58,7 @@ export default function Home() {
 
   const getChapterNumbers = useCallback(async () => {
     // Calling the Bible API to get the number of chapters of the selected book
-    const response = await fetch(
-      `${bible_api_host}/api/books/${book}`,
-      authObj,
-    );
+    const response = await fetch(`${bible_api_host}/api/books/${book}`);
 
     const book_info = await response.json();
     const number_of_chapters = book_info.chapters;
@@ -92,7 +77,6 @@ export default function Home() {
     // Calling the Bible API to get the text of the verses of the selected chapter
     const response = await fetch(
       `${bible_api_host}/api/verses/${version}/${book}/${chapter}`,
-      authObj,
     );
 
     const chapter_info = await response.json();
@@ -119,7 +103,6 @@ export default function Home() {
     // Calling the Bible API to get the number of verses of the selected chapter
     const response = await fetch(
       `${bible_api_host}/api/verses/${new_version}/${book}/${chapter}`,
-      authObj,
     );
 
     const chapter_info = await response.json();
