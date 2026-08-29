@@ -7,11 +7,29 @@ import List from "../components/List";
 import SkeletonLoader from "../components/SkeletonLoader";
 import styles from "../styles/home.module.css";
 
+const bible_api_host = "https://www.abibliadigital.api.br";
+
+const getBookAbbreviation = (book) => {
+  const digit = /\d/;
+  const str = book.abbrev.pt;
+  if (digit.test(str)) {
+    return str[0] + str[1].toUpperCase() + str.slice(2);
+  } else {
+    return str[0].toUpperCase() + str.slice(1);
+  }
+};
+
 export default function Home() {
   const [versions, setVersions] = useState([]);
-  const [books, setBooks] = useState([]);
+  const [bookData, setBookData] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [verses, setVerses] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const books = bookData.map((book) => ({
+    value: book.abbrev.pt,
+    label: isMobile ? getBookAbbreviation(book) : book.name,
+  }));
 
   const [version, setVersion] = useState("acf");
   const [book, setBook] = useState("gn");
@@ -21,8 +39,6 @@ export default function Home() {
   const [verseTexts, setVerseTexts] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const bible_api_host = "https://www.abibliadigital.api.br";
 
   const getVerseText = useCallback(async () => {
     setText(verseTexts[verse - 1]);
@@ -48,12 +64,7 @@ export default function Home() {
 
     const books = await response.json();
 
-    setBooks(
-      books.map((book) => ({
-        value: book.abbrev.pt,
-        label: book.name,
-      })),
-    );
+    setBookData(books);
   };
 
   const getChapterNumbers = useCallback(async () => {
@@ -144,6 +155,14 @@ export default function Home() {
   useEffect(() => {
     getBibleVersions();
     getBibleBooks();
+  }, []);
+
+  useEffect(() => {
+    const updateViewport = () => setIsMobile(window.innerWidth < 600);
+
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => window.removeEventListener("resize", updateViewport);
   }, []);
 
   useEffect(() => {
